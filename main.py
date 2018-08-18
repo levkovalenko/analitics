@@ -1,5 +1,6 @@
-from utils import read_file_line_by_line, Solution, logger
+from utils import read_file_line_by_line, Solution, logger, My_pool
 from rules import CODEX, COURT, COD
+
 import time
 
 #gen = read_file_line_by_line('mew.txt', 'cp1251')
@@ -16,12 +17,13 @@ while True:
     solution_parse = solution.split('установил:')[1]
     solution_parse = solution_parse.split('постановил:')[0]
     solution_list.append(Solution(text=solution_parse, RULES=[CODEX], name='sol_'+str(i)))
-    i+=1
+    i += 1
 
 t1 = time.time()
-[(sol.start(), sol.join()) for sol in solution_list]
+test = My_pool(solution_list, 64)
+test.start()
 logger.info('all thread starts')
-
+[(sol.join()) for sol in solution_list]
 t2 = time.time()
 logger.info('time of work: ' + str(t2 - t1))
 print(t2-t1)

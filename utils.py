@@ -1,6 +1,6 @@
 import asyncio
 from yargy import Parser
-
+import random
 import time
 import logging
 import re
@@ -38,9 +38,9 @@ class Solution(object):
         self.text_to_parse = text
         self.links = []
         self.RULES = RULES
-        self.thread_list = [Process(name='thread' + str(_), target=self.find_all,
+        self.thread_list = [Process(name=name + 'thread_' + str(_), target=self.find_all,
                                     args=(line, self.RULES, name + ' thread' + str(_)))
-                            if self.match(text) else False
+                            if self.match(line) else False
                             for (_, line) in enumerate(self.text_to_parse.split('\n'))]
 
     def find_all(self, text, GR, thread_name):
@@ -85,3 +85,33 @@ class Solution(object):
             return True
         else:
             return False
+
+
+class My_pool(object):
+    def __init__(self, list_of_solutions, count_of_threads):
+        self.solutions = list_of_solutions
+        list_of_threads = []
+        for solution in self.solutions:
+            list_of_threads = list_of_threads + solution.thread_list
+        random.shuffle(list_of_threads)
+        self.thread_list = list_of_threads
+        self.max_count = count_of_threads
+
+    def start(self):
+        i = 0
+        thread_stac = set()
+        for thread in self.thread_list:
+            if not thread:
+                continue
+            thread_stac.add(thread)
+            thread.start()
+            i += 1
+            thread_to_kill = Process()
+            while i >= self.max_count:
+                for thread_ in thread_stac:
+                    if not thread_.is_alive():
+                        thread_to_kill = thread_
+                        i -= 1
+                        break
+            print(thread_to_kill.name, len(thread_stac))
+            thread_stac.discard(thread_to_kill)
