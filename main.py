@@ -1,5 +1,5 @@
 from utils import read_file_line_by_line, Solution, logger
-from rules import CODEX, COURT
+from rules import CODEX, COURT, COD
 import time
 
 #gen = read_file_line_by_line('mew.txt', 'cp1251')
