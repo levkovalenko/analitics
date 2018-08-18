@@ -3,8 +3,8 @@ from rules import CODEX, COURT, COD
 
 import time
 
-#gen = read_file_line_by_line('mew.txt', 'cp1251')
-gen = read_file_line_by_line('aaaa.txt')
+gen = read_file_line_by_line('mew.txt', 'cp1251')
+#gen = read_file_line_by_line('aaaa.txt')
 solution_list = []
 i = 0
 while True:
@@ -20,7 +20,7 @@ while True:
     i += 1
 
 t1 = time.time()
-test = My_pool(solution_list, 64)
+test = My_pool(solution_list, 32)
 test.start()
 logger.info('all thread starts')
 [(sol.join()) for sol in solution_list]
