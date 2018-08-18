@@ -5,6 +5,7 @@ import time
 #gen = read_file_line_by_line('mew.txt', 'cp1251')
 gen = read_file_line_by_line('aaaa.txt')
 solution_list = []
+i = 0
 while True:
     solution = next(gen)
     if solution == 'stop':
@@ -14,15 +15,18 @@ while True:
         continue
     solution_parse = solution.split('установил:')[1]
     solution_parse = solution_parse.split('постановил:')[0]
-    solution_list.append(Solution(text=solution_parse, RULES=[CODEX]))
+    solution_list.append(Solution(text=solution_parse, RULES=[CODEX], name='sol_'+str(i)))
+    i+=1
 
 t1 = time.time()
-[sol.start() for sol in solution_list]
+[(sol.start(), sol.join()) for sol in solution_list]
 logger.info('all thread starts')
-[sol.join() for sol in solution_list]
+
 t2 = time.time()
 logger.info('time of work: ' + str(t2 - t1))
+print(t2-t1)
 logger.info('all thread ends')
+[sol.show_log() for sol in solution_list]
 [sol.show() for sol in solution_list]
 
 

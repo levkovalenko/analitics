@@ -98,4 +98,3 @@ COURT = rule(
             'российская федерация'
         }).interpretation(COURT_.rf),
      ).interpretation(COURT_)
-
