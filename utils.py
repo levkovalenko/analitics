@@ -4,6 +4,7 @@ import random
 import time
 import logging
 import re
+import  gc
 from multiprocessing import Process, Pool
 from multiprocessing.dummy import  Pool as ThPool, Process as Thread
 import pathos.pools as pp
@@ -13,6 +14,7 @@ logging.basicConfig(
     level=logging.DEBUG,
     filename='tmp.log')
 logger = logging
+
 
 
 @asyncio.coroutine
@@ -38,7 +40,7 @@ class Solution(object):
         self.text_to_parse = text
         self.links = []
         self.RULES = RULES
-        self.thread_list = [Process(name=name + 'thread_' + str(_), target=self.find_all,
+        self.thread_list = [Thread(name=name + 'thread_' + str(_), target=self.find_all,
                                     args=(line, self.RULES, name + ' thread' + str(_)))
                             if self.match(line) else False
                             for (_, line) in enumerate(self.text_to_parse.split('\n'))]
@@ -62,6 +64,8 @@ class Solution(object):
         t2 = time.time()
         logger.info(thread_name + ': ' + str(ans))
         logger.info('time of work current ' + thread_name + ': ' + str(t2 - t1))
+        del GR, text, thread_name, ans
+        gc.collect()
 
     def start(self):
         [thread.start() if thread else False for thread in self.thread_list]
@@ -106,12 +110,17 @@ class My_pool(object):
             thread_stac.add(thread)
             thread.start()
             i += 1
-            thread_to_kill = Process()
+            thread_to_kill = Thread()
             while i >= self.max_count:
                 for thread_ in thread_stac:
                     if not thread_.is_alive():
                         thread_to_kill = thread_
                         i -= 1
                         break
+
+            if 'Thread' in thread_to_kill.name:
+                continue
+            gc.collect()
             print(thread_to_kill.name, len(thread_stac))
+
             thread_stac.discard(thread_to_kill)

@@ -20,7 +20,7 @@ while True:
     i += 1
 
 t1 = time.time()
-test = My_pool(solution_list, 32)
+test = My_pool(solution_list, 16)
 test.start()
 logger.info('all thread starts')
 [(sol.join()) for sol in solution_list]
