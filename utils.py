@@ -4,7 +4,7 @@ import time
 import logging
 import re
 import  gc
-from multiprocessing import Process, Pool
+from multiprocessing import Process, Manager
 from multiprocessing.dummy import  Pool as ThPool, Process as Thread
 
 logging.basicConfig(
@@ -66,7 +66,7 @@ class Solution(object):
     def __init__(self, text, RULES, name):
         self.name = name
         self.text_to_parse = text
-        self.links = []
+        self.links = Manager().list()
         self.RULES = RULES
         self.thread_list = [Process(name=name + 'thread_' + str(_), target=self.find_all,
                                     args=(line, self.RULES, name + ' thread' + str(_)))
