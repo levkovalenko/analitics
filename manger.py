@@ -4,7 +4,7 @@ import ast
 
 IP_ADDRESSES = [('127.0.0.1', 2020)]
 gen = read_file_line_by_line('mew.txt', 'cp1251')
-# gen = read_file_line_by_line('aaaa.txt')
+#gen = read_file_line_by_line('aaaa.txt')
 
 workers = [Worker(address=addr, name='worker_' + str(i)) for i, addr in enumerate(IP_ADDRESSES)]
 
@@ -30,15 +30,26 @@ while True:
         while message:
             time.sleep(0.5)
             for worker in workers:
-                if False == worker.working:
+                if not worker.working:
                     print('new ', i)
                     if worker.result != '':
                         result.append(ast.literal_eval(worker.result))
-                        [print(res) for res in result]
                     worker.start(message)
                     message = ''
+[(worker.join(), result.append(ast.literal_eval(worker.result))) for worker in workers]
+if i % 10:
+    message = str(solution_list)
+    print(i)
+    print('new ', i)
+    worker = workers[0]
+    worker.start(message)
+    message = ''
+    worker.join()
+    result.append(ast.literal_eval(worker.result))
 
-[print(res) for res in result]
+
+with open('links.txt', 'w+') as f:
+    f.write(str(result))
 t2 = time.time()
 logger.info('time of work: ' + str(t2 - t1))
 print(t2 - t1)

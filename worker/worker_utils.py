@@ -3,7 +3,11 @@ import time
 import logging
 import re
 import gc
+import random
 from multiprocessing import Process, Manager
+from mem_top import mem_top
+
+memory = mem_top
 
 logging.basicConfig(
     format=u' %(levelname)-8s [%(asctime)s]  %(message)s',
@@ -20,6 +24,7 @@ class MyPool(object):
     def start(self):
         i = 0
         thread_stac = set()
+        random.shuffle(self.thread_list)
         for thread in self.thread_list:
             if not thread:
                 continue
@@ -40,6 +45,9 @@ class MyPool(object):
             print(thread_to_kill.name, len(thread_stac))
 
             thread_stac.discard(thread_to_kill)
+            gc.collect()
+
+        logger.debug(mem_top())
 
 
 class Solution(object):
@@ -71,7 +79,7 @@ class Solution(object):
         if ans:
             self.links.append(ans)
         t2 = time.time()
-        logger.info(thread_name + ': ' + str(ans))
+        #logger.info(thread_name + ': ' + str(ans))
         logger.info('time of work current ' + thread_name + ': ' + str(t2 - t1))
         del GR, text, thread_name, ans
         gc.collect()

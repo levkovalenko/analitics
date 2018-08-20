@@ -52,6 +52,9 @@ class Worker(object):
         message = message.encode()
         self.__socket.send(message)
 
+    def join(self):
+        self.__process.join()
+
     def __recv__(self):
         text = b''
         while True:
@@ -70,13 +73,11 @@ class Worker(object):
         self.__connect__()
         self.__send__(message)
         self.__result = self.__recv__()
-        print(self.__result)
         t2 = time.time()
         self.__socket.close()
-        logger.debug(self.__result)
+        #logger.debug(self.__result)
         logger.debug(self.__name + ' end work at ' + str(t2-t1))
         self.__working = False
-        print(self.working)
 
     def start(self, message):
         self.__result = ''

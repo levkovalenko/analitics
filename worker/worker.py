@@ -39,7 +39,7 @@ def work(conn):
     logger.info('all thread ends')
 
     [sol.show_log() for sol in solution_list]
-    [sol.show() for sol in solution_list]
+    #[sol.show() for sol in solution_list]
     links = str([sol.get_links() for sol in solution_list]).encode()
     conn.send(links)
     conn.close()
